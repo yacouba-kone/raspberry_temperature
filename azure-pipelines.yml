@@ -21,7 +21,7 @@ steps:
   displayName: 'Use Python $(python.version)'
 
 - script: |
-    pip install kedro==0.16.5
+    pip install kedro
   displayName: 'Install Kedro'
 
 - script: |
