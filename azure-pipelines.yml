@@ -1,0 +1,39 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+trigger:
+- develop
+
+pool:
+  vmImage: ubuntu-latest
+
+strategy:
+  matrix:
+    Python314:
+      python.version: '3.14'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    python -m pip install uv
+  displayName: 'Install uv'
+
+- script: |
+    uv add kedro
+    uv sync
+  displayName: 'Install Kedro and dependencies'
+
+- script: |
+    uv run kedro --version
+  displayName: 'Check Kedro'
+
+- script: |
+    uv run pytest
+  displayName: 'Run pytest'
+
