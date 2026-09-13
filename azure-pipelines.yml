@@ -11,15 +11,15 @@ pool:
 
 strategy:
   matrix:
-    python31:
-      python.version: '3.1'
+    python314:
+      python.version: '3.14.7'
 
 
 steps:
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '$(python.version)'
-  displayName: 'Definir python 3.1'
+  displayName: 'Definir python 3.14.7'
 
 - script: |
     pip install kedro==0.16.5
