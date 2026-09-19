@@ -1,0 +1,25 @@
+features:
+  - intensity
+  - humidity
+  - ratio
+
+label_name: temperature
+
+test_size: 0.2
+random_state: 42
+
+
+
+#
+## Parameters for the example pipeline. Feel free to delete these once you
+## remove the example pipeline from pipeline.py and the example nodes in
+## `src/pipelines/`
+#features:
+##  - humidity
+##  - intensity
+#  - ratio
+#label_name:
+#  - temperature
+#
+#
+

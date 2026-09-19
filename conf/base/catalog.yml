@@ -1,0 +1,100 @@
+raw_data:
+  type: pandas.JSONDataset
+  filepath: data/01_raw/IntroMLops-1.json
+
+message_broker:
+  type: pandas.JSONDataset
+  filepath: data/01_raw/message_from_message_broker.json
+
+cleaned_data:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/cleaned_data.pq
+
+x_train:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/x_train.pq
+
+x_test:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/x_test.pq
+
+y_train:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/y_train.pq
+
+y_test:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/y_test.pq
+
+model_temperature:
+  type: pickle.PickleDataset
+  filepath: data/06_models/model_temperature.pkl
+
+output_table_dev:
+  #type: pandas.CSVDataset
+  #filepath: data/07_model_output/predictions.csv
+  type: pandas.SQLTableDataset
+  table_name: training_table
+  credentials: duckdb_credentials
+  save_args:
+    if_exists: append
+  
+output_table_prod:
+  type: pandas.SQLTableDataset
+  table_name: training_table_prod
+  credentials: duckdb_credentials
+  save_args:
+    if_exists: append  
+    
+
+
+
+#raspberry_data:
+#  type: kedro.extras.datasets.json.JSONDataSet
+#  filepath: data/01_raw/IoTHubInputRasberry.json
+#
+#message_broker:
+#  type: kedro.extras.datasets.json.JSONDataSet
+#  filepath: data/01_raw/message_from_message_broker.json
+#
+##raspberry_data:
+##  type: pandas.CSVDataSet
+##  filepath: data/01_raw/raspberry_data.csv
+##  load_args:
+##    sep: ";"
+#
+#cleaned_data :
+#  type: pandas.CSVDataSet
+#  filepath: data/02_intermediate/cleaned_data.csv
+#
+#cleaned_data_prod :
+#  type: pandas.CSVDataSet
+#  filepath: data/02_intermediate/cleaned_data_prod.csv
+#
+#temperature_scatter_plot:
+#  type: kedro.extras.datasets.matplotlib.MatplotlibWriter
+#  filepath: data/08_reporting/predict_temp.png
+#
+#model_temperature:
+#  type: raspberry_temperature.extras.datasets.azure_blob_pickle_dataset.AzureBlobPickleDataSet
+#  container: raspberry
+#  blob_name: models
+#  credentials:
+#    account_name : "xxxxxxxxxxxxxxxxxxxxxxxxx"
+#    account_key : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#
+#output_table_dev:
+#  type: pandas.SQLTableDataSet
+#  table_name: exploration
+#  credentials:
+#    con: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}
+#  save_args:
+#    if_exists: replace
+#
+#output_table_prod:
+#  type: pandas.SQLTableDataSet
+#  table_name: output_table_prod
+#  credentials:
+#    con: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+#  save_args:
+#    if_exists: append

@@ -8,6 +8,11 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "azure-eventhub>=5.15.1",
+    "celery>=5.6.3",
+    "duckdb>=1.5.5",
+    "duckdb-engine>=0.17.0",
+    "kedro>=1.6.0",
     "matplotlib>=3.11.2",
     "mlflow>=3.16.0",
     "pandas>=3.0.5",
@@ -28,3 +33,11 @@ dev = [
     "pytest>=9.1.1",
     "ruff>=0.16.7",
 ]
+
+[tool.kedro] 
+package_name = "raspberry_temperature" 
+project_name = "raspberry-temperature" 
+kedro_init_version = "1.6.0" 
+source_dir = "src"
+[tool.kedro_telemetry]
+project_id = "85a49cb3a26f488fb8cd29fc0ffec2f3"

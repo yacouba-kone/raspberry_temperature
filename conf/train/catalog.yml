@@ -1,0 +1,17 @@
+output_table_dev:
+  type: kedro.extras.datasets.pandas.SQLTableDataSet
+  table_name: output_dev
+  credentials:
+    con: "postgresql://cre_admin:S5TANAh8bW93@psql-dsp-cre-dev-flex.postgres.database.azure.com:5432/raspberry_temp"
+  save_args:
+    if_exists: replace
+    index: False
+
+input_db:
+  type: kedro.io.MemoryDataSet
+
+output_data:
+  type: kedro.io.MemoryDataSet
+
+osi_output:
+  type: kedro.io.MemoryDataSet

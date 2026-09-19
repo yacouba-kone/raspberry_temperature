@@ -1,0 +1,13 @@
+pai:
+   runs_storage: "logs/pai"
+   artifacts_storage: "logs/pai"
+
+features:
+  - intensity
+  - humidity
+  - ratio
+
+label_name: temperature
+
+test_size: 0.2
+random_state: 42
