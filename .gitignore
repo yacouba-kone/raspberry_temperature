@@ -5,6 +5,7 @@ build/
 dist/
 mlruns/
 wheels/
+conf/base/credentials.yml
 *.egg-info
 
 # Virtual environments
