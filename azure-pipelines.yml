@@ -8,32 +8,36 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-strategy:
-  matrix:
-    Python314:
-      python.version: '3.14'
+variables:
+  PYTHON_VERSION: '3.14'
 
 steps:
+
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+    versionSpec: '$(PYTHON_VERSION)'
+  displayName: 'Use Python $(PYTHON_VERSION)'
 
 - script: |
+    python --version
     python -m pip install --upgrade pip
     python -m pip install uv
-  displayName: 'Install uv'
+    uv --version
+  displayName: 'Install and check uv'
 
 - script: |
-    uv add kedro
-    uv sync
-  displayName: 'Install Kedro and dependencies'
-
+    uv sync --frozen
+    uv run python -c "import kedro_datasets; print('kedro-datasets OK')"
+  displayName: 'Install and verify project dependencies'
+  
 - script: |
     uv run kedro --version
   displayName: 'Check Kedro'
 
 - script: |
+    uv run kedro catalog describe-datasets
+  displayName: 'Validate Kedro catalog'
+
+- script: |
     uv run pytest
   displayName: 'Run pytest'
-
