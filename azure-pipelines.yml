@@ -9,7 +9,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  PYTHON_VERSION: '3.14'
+  PYTHON_VERSION: '3.13'
 
 steps:
 
@@ -26,8 +26,6 @@ steps:
   displayName: 'Install and check uv'
 
 - script: |
-    uv add kedro
-    uv add kedro-datasets
     uv sync --frozen
     uv run python -c "import kedro_datasets; print('kedro-datasets OK')"
   displayName: 'Install and verify project dependencies'
