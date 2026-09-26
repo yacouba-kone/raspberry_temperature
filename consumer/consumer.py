@@ -1,5 +1,5 @@
 # Basic imports
-from azure.eventhub import EventHubConsumerClient
+from azure.eventhub import EventHubConsumerClient,TransportType
 import sys
 import os 
 from consumer_logger import logger
@@ -65,7 +65,8 @@ def main():
     client = EventHubConsumerClient.from_connection_string(
         conn_str=CONNECTION_STR,
         consumer_group=CONSUMER_GROUP,
-        eventhub_name=EVENT_HUB_NAME
+        eventhub_name=EVENT_HUB_NAME,
+        #transport_type=TransportType.AmqpOverWebsocket # a supprimer si on peut se connecter en amqp
     )
     logger.info('Connection to Azure Event Hub set')
     #with client:

@@ -11,8 +11,10 @@ logger = logging.getLogger()
 
 # Configure saving path
 # We're working relative to the root directory
-PATH_TO_SAVE_BROKER_MESSAGE = './data/01_raw/message_from_message_broker.json'
-
+#PATH_TO_SAVE_BROKER_MESSAGE = './data/01_raw/message_from_message_broker.json'
+PATH_TO_SAVE_BROKER_MESSAGE = (
+    PROJECT_ROOT / "data" / "01_raw" / "message_from_message_broker.json"
+)
 
 
 #def process_message_with_kedro(message: str):
@@ -38,7 +40,7 @@ def process_message_with_kedro(message: str):
     logger.info("Message sauvegardé dans %s", PATH_TO_SAVE_BROKER_MESSAGE)
 
     proc = subprocess.run(
-        ["uv", "run", "kedro", "run", "--pipeline", "prod"],
+        ["uv", "run", "kedro", "run", "--pipelines", "prod"],
         capture_output=True,
         text=True,
         cwd=PROJECT_ROOT,

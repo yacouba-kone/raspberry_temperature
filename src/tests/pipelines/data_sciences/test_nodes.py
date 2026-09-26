@@ -1,4 +1,4 @@
-from raspberry_temperature.pipelines.data_science.nodes import split_data, predict
+from raspberry_temperature.pipelines.data_sciences.nodes import split_data, predict
 import pandas as pd
 import numpy as np
 import pytest
@@ -9,34 +9,60 @@ class Model_couple_test(LinearRegression):
     def predict(self, df: pd.DataFrame) -> float:
         return df.sum(axis=1)[0]
 
-
 def test_split_data():
-    # Given
     given_df = pd.DataFrame({
-        'feature': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        'label': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        "feature": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "label": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
     })
-    parameters = {
-        'feature': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        'label': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    }
-    features = ['feature']
-    label = 'label'
-    # When
-    actual_splits = split_data(given_df, features, label)
-    # Then
-    expected_x_train = pd.DataFrame({'feature': [10, 2, 7, 8, 4, 1, 6]})
-    expected_x_test = pd.DataFrame({'feature': [3, 9, 5]}, index=[2, 8, 4])
-    expected_y_train = pd.Series([100, 20, 70, 80, 40, 10, 60])
-    expected_y_test = pd.Series([30, 90, 50], index=[2, 8, 4])
 
-    expected_splits = [
-        expected_x_train,
-        expected_x_test,
-        expected_y_train,
-        expected_y_test
-    ]
+    features = ["feature"]
+    label = "label"
 
-    for actual, expected in zip(actual_splits, expected_splits):
-        assert actual.shape == expected.shape
+    x_train, x_test, y_train, y_test = split_data(
+        given_df,
+        features,
+        label,
+        test_size=0.3,
+        random_state=42,
+    )
+
+    assert len(x_train) == 7
+    assert len(x_test) == 3
+    assert len(y_train) == 7
+    assert len(y_test) == 3
+
+    assert list(x_train.columns) == ["feature"]
+    assert list(x_test.columns) == ["feature"]
+    assert list(y_train.columns) == ["label"]
+    assert list(y_test.columns) == ["label"]
+
+#def test_split_data():
+#    # Given
+#    given_df = pd.DataFrame({
+#        'feature': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+#        'label': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+#    })
+#    parameters = {
+#        'feature': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+#        'label': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+#    }
+#    features = ['feature']
+#    label = 'label'
+#    # When
+#    actual_splits = split_data(given_df, features, label)
+#    # Then
+#    expected_x_train = pd.DataFrame({'feature': [10, 2, 7, 8, 4, 1, 6]})
+#    expected_x_test = pd.DataFrame({'feature': [3, 9, 5]}, index=[2, 8, 4])
+#    expected_y_train = pd.Series([100, 20, 70, 80, 40, 10, 60])
+#    expected_y_test = pd.Series([30, 90, 50], index=[2, 8, 4])
+#
+#    expected_splits = [
+#        expected_x_train,
+#        expected_x_test,
+#        expected_y_train,
+#        expected_y_test
+#    ]
+#
+#    for actual, expected in zip(actual_splits, expected_splits):
+#        assert actual.shape == expected.shape
 

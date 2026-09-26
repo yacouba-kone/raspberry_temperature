@@ -1,9 +1,9 @@
 [
   {
-    "messageId": 160,
+    "messageId": 25,
     "deviceId": "Raspberry Pi Web Client",
-    "temperature": 23.794446308330194,
-    "humidity": 67.76103828891928,
-    "intensity": 23.794446308330194
+    "temperature": 30.10616596812714,
+    "humidity": 68.68204934078138,
+    "intensity": 30.10616596812714
   }
 ]

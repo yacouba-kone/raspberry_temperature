@@ -1,14 +1,16 @@
 raw_data:
-  type: pandas.JSONDataset
-  filepath: data/01_raw/IntroMLops-1.json
+  type: json.JSONDataset
+  filepath: azure://raspberry-temperature/01_raw/IntroMLops-1.json
 
 message_broker:
-  type: pandas.JSONDataset
-  filepath: data/01_raw/message_from_message_broker.json
+  type: json.JSONDataset
+  filepath: "abfs://raspberry-temperature/01_raw/message_from_message_broker.json"
+  credentials: azure_blob
 
 cleaned_data:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/cleaned_data.pq
+  filepath: "abfs://raspberry-temperature/02_intermediate/cleaned_data.pq"
+  credentials: azure_blob
 
 x_train:
   type: pandas.ParquetDataset
@@ -28,7 +30,12 @@ y_test:
 
 model_temperature:
   type: pickle.PickleDataset
-  filepath: data/06_models/model_temperature.pkl
+  filepath: abfs://raspberry-temperature/06_models/model_temperature.pkl
+  credentials: azure_blob
+  
+#model_temperature:
+#  type: pickle.PickleDataset
+#  filepath: data/06_models/model_temperature.pkl
 
 output_table_dev:
   #type: pandas.CSVDataset
