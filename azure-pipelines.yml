@@ -26,10 +26,12 @@ steps:
   displayName: 'Install and check uv'
 
 - script: |
+    uv add kedro
+    uv add kedro-datasets
     uv sync --frozen
     uv run python -c "import kedro_datasets; print('kedro-datasets OK')"
   displayName: 'Install and verify project dependencies'
-  
+
 - script: |
     uv run kedro --version
   displayName: 'Check Kedro'
