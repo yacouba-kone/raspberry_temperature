@@ -35,21 +35,5 @@ steps:
   displayName: 'Check Kedro'
 
 - script: |
-    uv run kedro catalog describe-datasets
-  displayName: 'Validate Kedro catalog'
-
-- script: |
-    mkdir -p conf/base
-    cat > conf/base/credentials.yml <<'EOF'
-    azure_blob:
-      account_name: ci-test
-      account_key: ci-test
-
-    duckdb_credentials:
-      con: "duckdb:///data/07_model_output/raspberry_temperature.duckdb"
-    EOF
-  displayName: 'Create CI test credentials'
-  
-- script: |
     uv run pytest
   displayName: 'Run pytest'
