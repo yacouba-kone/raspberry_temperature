@@ -90,7 +90,7 @@ steps:
 - task: AzureCLI@2
   displayName: 'Deploy consumer to Azure Container Apps'
   inputs:
-    azureSubscription: 'ACR-raspberry'
+    azureSubscription: 'Azure-raspberry'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
