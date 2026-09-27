@@ -39,10 +39,6 @@ steps:
   displayName: 'Check Kedro'
 
 - script: |
-    uv run kedro catalog describe-datasets
-  displayName: 'Validate Kedro catalog'
-
-- script: |
     mkdir -p conf/base
 
     cat > conf/base/credentials.yml <<'EOF'
@@ -61,6 +57,10 @@ steps:
     uv run kedro info
   displayName: 'Create and verify CI credentials'
 
+- script: |
+    uv run kedro catalog describe-datasets
+  displayName: 'Validate Kedro catalog'
+  
 - script: |
     uv run pytest
   displayName: 'Run pytest'
