@@ -2,6 +2,7 @@
 # Create and test a Python package on multiple Python versions.
 # Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
 trigger:
 - develop
 
@@ -9,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  PYTHON_VERSION: '3.13'
+  PYTHON_VERSION: '3.14'
 
 steps:
 
@@ -27,13 +28,35 @@ steps:
 
 - script: |
     uv sync --frozen
+  displayName: 'Install project dependencies'
+
+- script: |
     uv run python -c "import kedro_datasets; print('kedro-datasets OK')"
-  displayName: 'Install and verify project dependencies'
+  displayName: 'Verify Kedro datasets'
 
 - script: |
     uv run kedro --version
   displayName: 'Check Kedro'
 
 - script: |
+    uv run kedro catalog describe-datasets
+  displayName: 'Validate Kedro catalog'
+
+- script: |
+    mkdir -p conf/base
+
+    cat > conf/base/credentials.yml <<'EOF'
+    azure_blob:
+      account_name: ci-test
+      account_key: ci-test
+
+    duckdb_credentials:
+      con: "duckdb:///data/07_model_output/raspberry_temperature.duckdb"
+    EOF
+  displayName: 'Create CI test credentials'
+
+- script: |
     uv run pytest
   displayName: 'Run pytest'
+
+
