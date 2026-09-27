@@ -66,21 +66,23 @@ steps:
   displayName: 'Run pytest'
 
 - task: Docker@2
-  displayName: 'Build consumer image'
+  displayName: 'Build and push consumer image'
   inputs:
-    command: 'build'
-    Dockerfile: 'Dockerfile'
+    command: 'buildAndPush'
+    containerRegistry: 'ACR-raspberry'
     repository: 'raspberry-consumer'
+    Dockerfile: 'Dockerfile'
     tags: |
       $(Build.BuildId)
       latest
 
 - task: Docker@2
-  displayName: 'Build Celery image'
+  displayName: 'Build and push Celery image'
   inputs:
-    command: 'build'
-    Dockerfile: 'Dockerfile.celery'
+    command: 'buildAndPush'
+    containerRegistry: 'ACR-raspberry'
     repository: 'raspberry-celery'
+    Dockerfile: 'Dockerfile.celery'
     tags: |
       $(Build.BuildId)
       latest
