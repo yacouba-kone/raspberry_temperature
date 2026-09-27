@@ -60,8 +60,27 @@ steps:
 - script: |
     uv run kedro catalog describe-datasets
   displayName: 'Validate Kedro catalog'
-  
+
 - script: |
     uv run pytest
   displayName: 'Run pytest'
 
+- task: Docker@2
+  displayName: 'Build consumer image'
+  inputs:
+    command: 'build'
+    Dockerfile: 'Dockerfile'
+    repository: 'raspberry-consumer'
+    tags: |
+      $(Build.BuildId)
+      latest
+
+- task: Docker@2
+  displayName: 'Build Celery image'
+  inputs:
+    command: 'build'
+    Dockerfile: 'Dockerfile.celery'
+    repository: 'raspberry-celery'
+    tags: |
+      $(Build.BuildId)
+      latest
