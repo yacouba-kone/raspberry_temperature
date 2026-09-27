@@ -59,4 +59,3 @@ steps:
     uv run pytest
   displayName: 'Run pytest'
 
-
