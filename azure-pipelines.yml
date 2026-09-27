@@ -53,7 +53,13 @@ steps:
     duckdb_credentials:
       con: "duckdb:///data/07_model_output/raspberry_temperature.duckdb"
     EOF
-  displayName: 'Create CI test credentials'
+
+    echo "===== credentials.yml ====="
+    cat conf/base/credentials.yml
+
+    echo "===== Kedro environment ====="
+    uv run kedro info
+  displayName: 'Create and verify CI credentials'
 
 - script: |
     uv run pytest
