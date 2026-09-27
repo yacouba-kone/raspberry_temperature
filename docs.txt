@@ -1,0 +1,52 @@
+1. Dans Azure Portal
+
+Va dans Créer une ressource → cherche Container Registry.
+
+Remplis :
+
+Abonnement : ton abonnement Azure
+Groupe de ressources : my-resources
+Nom du registre : raspberryregistry
+(le nom doit être unique dans Azure ; uniquement lettres/chiffres)
+Emplacement : East US si tu veux rester dans la même région que ton Storage Account
+SKU : Basic
+
+Puis Vérifier + créer → Créer.
+
+2. Ensuite, on poussera ton image Docker
+
+Une fois le registre créé, on fera environ :
+
+az acr login --name raspberryregistry
+
+Puis on donnera un tag Azure à ton image :
+
+docker tag raspberry-consumer:latest raspberryregistry.azurecr.io/raspberry-consumer:latest
+
+Et enfin :
+
+docker push raspberryregistry.azurecr.io/raspberry-consumer:latest
+
+Après ça, dans ta Container App :
+
+Registre       : raspberryregistry
+Image          : raspberry-consumer
+Balise image   : latest
+
+docker tag raspberry-consumer:latest raspberryregistry.azurecr.io/raspberry-consumer:latest
+
+#############################################################################"
+
+cd D:\raspberry_temperature
+
+puis :
+
+docker build -f Dockerfile.celery -t raspberry-celery:latest .
+
+Si le build termine avec succès, fais :
+
+docker tag raspberry-celery:latest raspberryregistry.azurecr.io/raspberry-celery:latest
+
+puis :
+
+docker push raspberryregistry.azurecr.io/raspberry-celery:latest
