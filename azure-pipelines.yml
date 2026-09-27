@@ -98,3 +98,15 @@ steps:
         --name raspberry-consumer \
         --resource-group my-resources \
         --image raspberryregistry.azurecr.io/raspberry-consumer:$(Build.BuildId)
+
+- task: AzureCLI@2
+  displayName: 'Deploy Celery to Azure Container Apps'
+  inputs:
+    azureSubscription: 'Azure-raspberry'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az containerapp update \
+        --name raspberry-celery \
+        --resource-group my-resources \
+        --image raspberryregistry.azurecr.io/raspberry-celery:$(Build.BuildId)
