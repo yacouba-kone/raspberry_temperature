@@ -80,19 +80,19 @@ def process_message_with_kedro(message: str):
     )
 
     proc = subprocess.run(
-        ["uv", "run", "kedro", "run", "--pipelines", "prod"],
-        capture_output=True,
-        text=True,
-        cwd=PROJECT_ROOT,
-    )
+    ["uv", "run", "kedro", "run", "--pipelines", "prod"],
+    capture_output=True,
+    text=True,
+    cwd=PROJECT_ROOT,
+)
 
-    logger.info("===== KEDRO STDOUT =====")
-    logger.info(proc.stdout)
+    print("===== KEDRO STDOUT =====", flush=True)
+    print(proc.stdout, flush=True)
 
-    logger.info("===== KEDRO STDERR =====")
-    logger.error(proc.stderr)
+    print("===== KEDRO STDERR =====", flush=True)
+    print(proc.stderr, flush=True)
 
-    logger.info("KEDRO RETURN CODE = %s", proc.returncode)
+    print(f"===== KEDRO RETURN CODE = {proc.returncode} =====", flush=True)
 
     if proc.returncode != 0:
         raise RuntimeError(
