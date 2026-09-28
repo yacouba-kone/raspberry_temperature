@@ -33,13 +33,7 @@ model_temperature:
   filepath: abfs://raspberry-temperature/06_models/model_temperature.pkl
   credentials: azure_blob
   
-#model_temperature:
-#  type: pickle.PickleDataset
-#  filepath: data/06_models/model_temperature.pkl
-
 output_table_dev:
-  #type: pandas.CSVDataset
-  #filepath: data/07_model_output/predictions.csv
   type: pandas.SQLTableDataset
   table_name: training_table
   credentials: duckdb_credentials
@@ -47,14 +41,21 @@ output_table_dev:
     if_exists: append
   
 output_table_prod:
-  type: pandas.SQLTableDataset
+  type: raspberry_temperature.datasets.azure_sql_dataset.AzureSQLTableDataset
   table_name: training_table_prod
-  credentials: duckdb_credentials
-  save_args:
-    if_exists: append  
-    
+  if_exists: append
 
-
+  
+#output_table_prod:
+#  type: pandas.SQLTableDataset
+#  table_name: training_table_prod
+#  credentials: duckdb_credentials
+#  save_args:
+#    if_exists: append  
+  
+#model_temperature:
+#  type: pickle.PickleDataset
+#  filepath: data/06_models/model_temperature.pkl
 
 #raspberry_data:
 #  type: kedro.extras.datasets.json.JSONDataSet
