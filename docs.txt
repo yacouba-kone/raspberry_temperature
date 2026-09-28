@@ -50,3 +50,19 @@ docker tag raspberry-celery:latest raspberryregistry.azurecr.io/raspberry-celery
 puis :
 
 docker push raspberryregistry.azurecr.io/raspberry-celery:latest
+
+#################################################################################
+
+Raspberry / IoT
+      ↓
+ Azure Event Hub
+      ↓
+ raspberry-consumer
+      ↓
+ Azure Service Bus
+      ↓
+ raspberry-celery
+      ↓
+    Kedro
+      ↓
+ Azure Blob + DuckDB

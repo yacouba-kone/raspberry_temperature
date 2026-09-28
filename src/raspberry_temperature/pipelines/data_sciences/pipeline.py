@@ -1,3 +1,16 @@
+"""
+Fabrique du pipeline d'entraînement (data sciences).
+
+Le pipeline enchaîne trois nœuds :
+    1. ``split_data``   : découpage des données nettoyées en train/test ;
+    2. ``train_model``  : entraînement du modèle de régression linéaire ;
+    3. ``predict``      : calcul des prédictions et écriture dans la table
+       ``output_table_dev`` (base DuckDB en développement).
+
+Les features et le nom de la cible sont lus dans les paramètres Kedro
+(``conf/base/parameters.yml`` : ``features`` et ``label_name``).
+"""
+
 from matplotlib import pyplot as plt
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.model_selection import GridSearchCV
@@ -16,21 +29,32 @@ from kedro.pipeline import Pipeline, node
 from .nodes import split_data, predict, train_model
 
 
-def create_training_pipeline(**kwargs):
+def create_training_pipeline(**kwargs) -> Pipeline:
+    """Construit le pipeline d'entraînement du modèle de température.
+
+    Args:
+        **kwargs: arguments additionnels transmis par Kedro (ignorés ici).
+
+    Returns:
+        Pipeline: pipeline étiqueté ``ds_training_tag``.
+    """
     return Pipeline(
         [
+            # Nœud 1 : découpage de `cleaned_data` en 4 datasets (x/y train/test)
             node(
                 func=split_data,
                 inputs=["cleaned_data", "params:features", "params:label_name"],
                 outputs=["x_train", "x_test", "y_train", "y_test"],
                 name="splitting_data",
             ),
+            # Nœud 2 : entraînement (avec suivi MLflow) -> modèle sérialisé
             node(
                 func=train_model,
                 inputs=["x_train", "x_test", "y_train", "y_test"],
                 outputs="model_temperature",
                 name="train_model"
             ),
+            # Nœud 3 : prédictions sur le jeu de test -> table SQL de développement
             node(
                 predict,
                 inputs=["model_temperature", "x_test", "y_test"],
@@ -40,6 +64,11 @@ def create_training_pipeline(**kwargs):
         tags=["ds_training_tag"]
     )
 
+# ---------------------------------------------------------------------------
+# Code historique commenté : ancien enchaînement complet (data engineering,
+# entraînement, évaluation et suivi MLflow) exécutable hors Kedro. Conservé
+# comme référence de l'implémentation d'origine.
+# ---------------------------------------------------------------------------
 #def workflow_sciences(file_path: Path) -> None:
 #    print("Starting process for raspberry-temperature!")
 #    

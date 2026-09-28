@@ -1,3 +1,20 @@
+# ---------------------------------------------------------------------------
+# ATTENTION : ce fichier est HISTORIQUE, tout son code est commenté.
+#
+# L'ancienne fabrique de pipelines (`create_pipelines`) a été remplacée par
+# `raspberry_temperature/pipeline_registry.py` (`register_pipelines`), qui est
+# le point d'entrée réellement chargé par Kedro.
+#
+# Contenu conservé pour référence :
+#   - « de »   : pipeline de data engineering (données historiques, dev)
+#   - « ds »   : pipeline d'entraînement du modèle (data sciences)
+#   - « prod » : data engineering prod + envoi des données en production
+#   - « pprd » : data engineering prod + envoi des données en pré-production
+#   - « __default__ » : pipeline exécuté lorsqu'aucun nom n'est précisé
+#   - l'ancien décorateur `log_running_time`, appliqué à chaque pipeline pour
+#     mesurer le temps d'exécution global
+# ---------------------------------------------------------------------------
+
 #"""Construction of the master pipeline.
 #"""
 #
