@@ -43,15 +43,12 @@ steps:
 
     cat > conf/base/credentials.yml <<'EOF'
     azure_blob:
-      account_name: ci-test
-      account_key: ci-test
+      account_name: $(AZURE_STORAGE_ACCOUNT_NAME)
+      account_key: "$(AZURE_STORAGE_ACCOUNT_KEY)"
 
     duckdb_credentials:
       con: "duckdb:///data/07_model_output/raspberry_temperature.duckdb"
     EOF
-
-    echo "===== credentials.yml ====="
-    cat conf/base/credentials.yml
 
     echo "===== Kedro environment ====="
     uv run kedro info
