@@ -2,38 +2,108 @@
 # Create and test a Python package on multiple Python versions.
 # Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
 trigger:
 - develop
 
 pool:
   vmImage: ubuntu-latest
 
-strategy:
-  matrix:
-    Python314:
-      python.version: '3.14'
+variables:
+  PYTHON_VERSION: '3.14'
 
 steps:
+
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+    versionSpec: '$(PYTHON_VERSION)'
+  displayName: 'Use Python $(PYTHON_VERSION)'
 
 - script: |
+    python --version
     python -m pip install --upgrade pip
     python -m pip install uv
-  displayName: 'Install uv'
+    uv --version
+  displayName: 'Install and check uv'
 
 - script: |
-    uv add kedro
-    uv sync
-  displayName: 'Install Kedro and dependencies'
+    uv sync --frozen
+  displayName: 'Install project dependencies'
+
+- script: |
+    uv run python -c "import kedro_datasets; print('kedro-datasets OK')"
+  displayName: 'Verify Kedro datasets'
 
 - script: |
     uv run kedro --version
   displayName: 'Check Kedro'
 
 - script: |
+    mkdir -p conf/base
+
+    cat > conf/base/credentials.yml <<'EOF'
+    azure_blob:
+      account_name: $(AZURE_STORAGE_ACCOUNT_NAME)
+      account_key: "$(AZURE_STORAGE_ACCOUNT_KEY)"
+
+    duckdb_credentials:
+      con: "duckdb:///data/07_model_output/raspberry_temperature.duckdb"
+    EOF
+
+    echo "===== Kedro environment ====="
+    uv run kedro info
+  displayName: 'Create and verify CI credentials'
+
+- script: |
+    uv run kedro catalog describe-datasets
+  displayName: 'Validate Kedro catalog'
+
+- script: |
     uv run pytest
   displayName: 'Run pytest'
 
+- task: Docker@2
+  displayName: 'Build and push consumer image'
+  inputs:
+    command: 'buildAndPush'
+    containerRegistry: 'ACR-raspberry'
+    repository: 'raspberry-consumer'
+    Dockerfile: 'Dockerfile'
+    tags: |
+      $(Build.BuildId)
+      latest
+
+- task: Docker@2
+  displayName: 'Build and push Celery image'
+  inputs:
+    command: 'buildAndPush'
+    containerRegistry: 'ACR-raspberry'
+    repository: 'raspberry-celery'
+    Dockerfile: 'Dockerfile.celery'
+    tags: |
+      $(Build.BuildId)
+      latest
+
+- task: AzureCLI@2
+  displayName: 'Deploy consumer to Azure Container Apps'
+  inputs:
+    azureSubscription: 'Azure-raspberry'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az containerapp update \
+        --name raspberry-consumer \
+        --resource-group my-resources \
+        --image raspberryregistry.azurecr.io/raspberry-consumer:$(Build.BuildId)
+
+- task: AzureCLI@2
+  displayName: 'Deploy Celery to Azure Container Apps'
+  inputs:
+    azureSubscription: 'Azure-raspberry'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az containerapp update \
+        --name raspberry-celery \
+        --resource-group my-resources \
+        --image raspberryregistry.azurecr.io/raspberry-celery:$(Build.BuildId)
