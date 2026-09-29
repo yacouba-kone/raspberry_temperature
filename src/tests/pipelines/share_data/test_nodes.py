@@ -30,7 +30,4 @@ def test_predict():
     df_pred = predict(model, x_test_df, features)
 
     # Then: vérifications de base
-    # NB : le test ne contient volontairement aucune assertion pour l'instant,
-    # il se contente de vérifier que l'appel ne lève pas d'exception.
-    # À compléter, par exemple :
-    #     assert list(df_pred.columns) == ["y_pred", "Time"]
+    assert list(df_pred.columns) == ["y_pred", "Time"]

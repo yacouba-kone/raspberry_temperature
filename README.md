@@ -204,16 +204,6 @@ docker push raspberryregistry.azurecr.io/raspberry-consumer:latest
 
 ## Limitations connues
 
-- `src/raspberry_temperature/run.py` importe `create_pipelines` alors que
-  `pipeline_registry.py` expose `register_pipelines` : ce module n'est pas
-  exécutable en l'état.
-- Le script déclaré dans `pyproject.toml`
-  (`raspberry-temperature = "raspberry_temperature:main"`) ne correspond à
-  aucune fonction `main` du package `raspberry_temperature`.
-- `src/raspberry_temperature/pipeline.py` (ancienne fabrique de pipelines) est
-  entièrement commenté et n'est plus utilisé.
-- Le test `test_predict` du pipeline `share_data` ne contient pas encore
-  d'assertion.
 - Les seuils métier sont codés en dur dans les nœuds (température >= 30 °C,
   humidité >= 30) ; certains commentaires historiques mentionnent encore 60 %.
 

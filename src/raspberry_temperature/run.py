@@ -16,7 +16,7 @@ from kedro.pipeline import Pipeline
 # `create_pipelines()`. Cet import lèvera donc une `ImportError` ; il faudra
 # écrire `from raspberry_temperature.pipeline_registry import register_pipelines`
 # (ou rétablir `create_pipelines`) pour que ce module soit exécutable.
-from raspberry_temperature.pipeline_registry import create_pipelines
+from raspberry_temperature.pipeline_registry import register_pipelines
 
 class ProjectContext(KedroContext):
     """Users can override the remaining methods from the parent class here,
@@ -31,7 +31,7 @@ class ProjectContext(KedroContext):
 
     def _get_pipelines(self) -> Dict[str, Pipeline]:
         """Retourne les pipelines à exécuter pour ce contexte projet."""
-        return create_pipelines()
+        return register_pipelines()
 
 
 def run_package():
